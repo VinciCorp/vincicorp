@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VinciOS — VinciCorp</title>
+  <link rel="stylesheet" href="nav.css" />
+  <style>
+    /* ---- HERO ---- */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 4rem;
+      padding: 10rem 2.5rem 5rem;
+      max-width: var(--max-w);
+      margin: 0 auto;
+    }
+    .hero-bg {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: -1;
+    }
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(90px); opacity: 0.35;
+    }
+    .orb-1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(79,142,247,0.5), transparent);
+      top: -150px; right: -100px;
+      animation: drift 12s ease-in-out infinite alternate;
+    }
+    .orb-2 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(167,139,250,0.3), transparent);
+      bottom: -100px; left: -100px;
+      animation: drift 16s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes drift { 0% { transform: translate(0,0); } 100% { transform: translate(40px,40px); } }
+    .grid-overlay {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(79,142,247,0.08); border: 1px solid rgba(79,142,247,0.25);
+      color: var(--accent); font-size: 0.72rem; font-weight: 500;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 0.4rem 1rem; border-radius: 50px; margin-bottom: 1.75rem;
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 5.5vw, 4.5rem);
+      font-weight: 800; line-height: 1.08;
+      letter-spacing: -0.03em; margin-bottom: 1.5rem;
+    }
+    .hero-sub {
+      font-size: 1.05rem; color: var(--muted);
+      max-width: 480px; line-height: 1.75; margin-bottom: 2.5rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    /* SCREEN MOCKUP */
+    .hero-visual { display: flex; justify-content: center; animation: fadeInUp 1s ease 0.3s both; }
+    .screen-mockup {
+      width: 100%; max-width: 460px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; overflow: hidden;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+      animation: floatOS 6s ease-in-out infinite;
+    }
+    @keyframes floatOS { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .screen-bar {
+      height: 40px; background: #161d2a;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 6px; padding: 0 14px;
+    }
+    .screen-bar span { width: 11px; height: 11px; border-radius: 50%; }
+    .screen-bar span:nth-child(1) { background: #ff5f57; }
+    .screen-bar span:nth-child(2) { background: #febc2e; }
+    .screen-bar span:nth-child(3) { background: #28c840; }
+    .screen-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+    .screen-widgets { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .widget {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1rem;
+    }
+    .widget-lg { grid-column: 1/-1; }
+    .widget-label { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+    .widget-value { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .widget-bar { height: 4px; background: rgba(255,255,255,0.07); border-radius: 4px; overflow: hidden; }
+    .widget-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 4px; }
+
+    /* FEATURES */
+    .features { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 8rem 0; }
+    .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 3.5rem; }
+    .feature-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 2rem;
+      transition: transform 0.3s, border-color 0.3s;
+      opacity: 0; animation: fadeInUp 0.6s ease forwards;
+    }
+    .feature-card:hover { transform: translateY(-5px); border-color: rgba(79,142,247,0.3); }
+    .feature-icon { font-size: 1.7rem; margin-bottom: 1rem; }
+    .feature-card h3 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .feature-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+
+    /* ABOUT STRIP */
+    .about-strip { padding: 8rem 0; }
+    .about-inner { display: grid; grid-template-columns: 1fr auto; gap: 5rem; align-items: center; }
+    .about-text p { color: var(--muted); max-width: 500px; line-height: 1.8; margin-bottom: 2rem; }
+    .about-stats { display: flex; flex-direction: column; gap: 2.5rem; }
+    .stat-num {
+      display: block; font-family: var(--font-display); font-size: 3rem; font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1;
+    }
+    .stat-label { font-size: 0.82rem; color: var(--muted); margin-top: 0.25rem; }
+
+    /* WAITLIST */
+    .waitlist { padding: 8rem 0; text-align: center; border-top: 1px solid var(--border); background: var(--bg2); }
+    .waitlist p { color: var(--muted); margin-bottom: 2.5rem; font-size: 1.05rem; }
+    .waitlist-form { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+    .form-input {
+      flex: 1; min-width: 240px; max-width: 340px;
+      background: var(--surface); border: 1px solid var(--border2);
+      color: var(--text); font-family: var(--font-body); font-size: 0.95rem;
+      padding: 0.8rem 1.5rem; border-radius: 50px; outline: none;
+      transition: border-color 0.25s;
+    }
+    .form-input:focus { border-color: var(--accent); }
+    .form-input::placeholder { color: var(--muted); }
+    .waitlist-msg { margin-top: 1rem; font-size: 0.85rem; color: var(--accent); min-height: 1.2rem; }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; padding-top: 8rem; }
+      .hero-visual { display: none; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .about-inner { grid-template-columns: 1fr; }
+      .about-stats { flex-direction: row; }
+    }
+    @media (max-width: 600px) {
+      .features-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav" id="nav">
+    <a href="index.html" class="nav-logo">Vinci<span>Corp</span></a>
+    <ul class="nav-links">
+      <li><a href="products.html" class="active">Products</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <a href="#waitlist" class="nav-cta">Early Access</a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="grid-overlay"></div>
+    </div>
+    <div>
+      <div class="hero-badge">← <a href="products.html" style="color:inherit">Products</a> &nbsp;/&nbsp; VinciOS</div>
+      <h1>The OS built<br/>for <span class="gradient-text">what's next.</span></h1>
+      <p class="hero-sub">VinciOS reimagines the operating system from the ground up — intelligent, fast, and crafted for people who build the future.</p>
+      <div class="hero-actions">
+        <a href="#waitlist" class="btn btn-primary">Request Early Access</a>
+        <a href="#features" class="btn btn-outline">See What's Inside →</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="screen-mockup">
+        <div class="screen-bar"><span></span><span></span><span></span></div>
+        <div class="screen-body">
+          <div class="screen-widgets">
+            <div class="widget widget-lg">
+              <div class="widget-label">VinciOS</div>
+              <div class="widget-value">System Ready</div>
+              <div class="widget-bar"><span style="width:78%"></span></div>
+            </div>
+            <div class="widget"><div class="widget-label">AI Core</div><div class="widget-value">Active</div></div>
+            <div class="widget"><div class="widget-label">Performance</div><div class="widget-value">98%</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-label">Capabilities</div>
+      <h2 class="section-title">Built different,<br/>by design.</h2>
+      <div class="features-grid">
+        <div class="feature-card" style="animation-delay:0ms">
+          <div class="feature-icon">⚡</div>
+          <h3>Lightning Performance</h3>
+          <p>VinciOS boots in under two seconds and keeps every interaction snappy — no bloat, no compromises.</p>
+        </div>
+        <div class="feature-card" style="animation-delay:100ms">
+          <div class="feature-icon">🧠</div>
+          <h3>AI at the Core</h3>
+          <p>Not an add-on. Intelligence is woven into the kernel — your OS learns, adapts, and anticipates.</p>
+        </div>
+        <div class="feature-card" style="animation-delay:200ms">
+          <div class="feature-icon">🔒</div>
+          <h3>Privacy First</h3>
+          <p>End-to-end encrypted from boot. Your data stays yours — no telemetry, no exceptions.</p>
+        </div>
+        <div class="feature-card" style="animation-delay:300ms">
+          <div class="feature-icon">🛠</div>
+          <h3>Developer Native</h3>
+          <p>A terminal, package manager, and dev environment that feel like they were built by developers, for developers.</p>
+        </div>
+        <div class="feature-card" style="animation-delay:400ms">
+          <div class="feature-icon">🌐</div>
+          <h3>Universal Compatibility</h3>
+          <p>Run your existing apps natively. VinciOS bridges the gap without emulation overhead.</p>
+        </div>
+        <div class="feature-card" style="animation-delay:500ms">
+          <div class="feature-icon">✦</div>
+          <h3>Adaptive UI</h3>
+          <p>An interface that reshapes itself around how you work — your workflow, your rules.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-strip">
+    <div class="container">
+      <div class="about-inner">
+        <div class="about-text">
+          <div class="section-label">Philosophy</div>
+          <h2 class="section-title">Software that<br/>disappears.</h2>
+          <p>The best technology is invisible. It gets out of your way and lets you do your best work. VinciOS is the culmination of that belief — an operating system that feels less like software and more like a superpower.</p>
+          <a href="#waitlist" class="btn btn-primary">Join the Waitlist</a>
+        </div>
+        <div class="about-stats">
+          <div><span class="stat-num">2s</span><span class="stat-label">Boot time</span></div>
+          <div><span class="stat-num">0</span><span class="stat-label">Telemetry</span></div>
+          <div><span class="stat-num">∞</span><span class="stat-label">Possibilities</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="waitlist" id="waitlist">
+    <div class="container">
+      <div class="section-label">Early Access</div>
+      <h2 class="section-title">Be first in line.</h2>
+      <p>VinciOS is coming. Join the waitlist and get access before anyone else.</p>
+      <div class="waitlist-form">
+        <input type="email" id="emailInput" placeholder="your@email.com" class="form-input" />
+        <button class="btn btn-primary" onclick="handleSignup()">Join Waitlist</button>
+      </div>
+      <p class="waitlist-msg" id="waitlistMsg"></p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="nav-logo">Vinci<span style="color:var(--accent)">Corp</span></span>
+          <p>Building tools that close the gap between imagination and reality.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Products</h4>
+          <a href="vincicos.html">VinciOS</a>
+          <a href="aceblocks.html">AceBlocks</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">About</a>
+          <a href="mailto:hello@vincicorp.com">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <a href="#">Twitter / X</a>
+          <a href="#">GitHub</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 VinciCorp. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+
+    const cards = document.querySelectorAll('.feature-card');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.style.animationPlayState = 'running'; obs.unobserve(e.target); } });
+    }, { threshold: 0.15 });
+    cards.forEach(c => { c.style.animationPlayState = 'paused'; obs.observe(c); });
+
+    function handleSignup() {
+      const input = document.getElementById('emailInput');
+      const msg = document.getElementById('waitlistMsg');
+      const email = input.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        msg.textContent = 'Please enter a valid email.'; msg.style.color = '#f87171'; return;
+      }
+      msg.textContent = "You're on the list! 🚀"; msg.style.color = 'var(--accent)'; input.value = '';
+    }
+    document.getElementById('emailInput')?.addEventListener('keydown', e => { if (e.key === 'Enter') handleSignup(); });
+  </script>
+</body>
+</html>

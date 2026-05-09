@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — VinciCorp</title>
+  <link rel="stylesheet" href="nav.css" />
+  <style>
+    /* ABOUT PAGE */
+    .page-hero {
+      padding: 16rem 0 8rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(167,139,250,0.07) 0%, transparent 70%);
+      top: 0; right: 10%;
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2.5rem;
+    }
+    .eyebrow-line { width: 40px; height: 1px; background: var(--border2); }
+    .eyebrow-text { font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
+    .page-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 7vw, 6rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      max-width: 700px;
+      margin-bottom: 2rem;
+    }
+    .page-hero p {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 540px;
+      line-height: 1.8;
+    }
+
+    /* MISSION */
+    .mission {
+      padding: 6rem 0;
+      border-top: 1px solid var(--border);
+    }
+    .mission-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8rem;
+      align-items: start;
+    }
+    .mission-text h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+    }
+    .mission-text p {
+      color: var(--muted); line-height: 1.85; margin-bottom: 1.25rem; font-size: 0.98rem;
+    }
+    .mission-values { display: flex; flex-direction: column; gap: 1.5rem; padding-top: 2rem; }
+    .value {
+      padding: 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: border-color 0.3s;
+    }
+    .value:hover { border-color: var(--border2); }
+    .value h4 {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .value-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .value p { font-size: 0.875rem; color: var(--muted); line-height: 1.65; }
+
+    /* TIMELINE / STORY */
+    .story {
+      padding: 8rem 0;
+      border-top: 1px solid var(--border);
+      background: var(--bg2);
+    }
+    .story-header { text-align: center; margin-bottom: 5rem; }
+    .timeline {
+      max-width: 680px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 8px; bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      opacity: 0.3;
+    }
+    .timeline-item {
+      padding: 0 0 3rem 2.5rem;
+      position: relative;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -4px; top: 8px;
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--glow-blue);
+    }
+    .timeline-date {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .timeline-item h4 {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+    .timeline-item p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+
+    /* CONTACT */
+    .contact {
+      padding: 8rem 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .contact h2 { margin-bottom: 1rem; }
+    .contact p { color: var(--muted); font-size: 1.05rem; max-width: 400px; margin: 0 auto 2.5rem; line-height: 1.7; }
+    .contact-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    @media (max-width: 800px) {
+      .mission-inner { grid-template-columns: 1fr; gap: 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav" id="nav">
+    <a href="index.html" class="nav-logo">Vinci<span>Corp</span></a>
+    <ul class="nav-links">
+      <li><a href="products.html">Products</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+    </ul>
+    <a href="mailto:hello@vincicorp.com" class="nav-cta">Get in Touch</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="hero-eyebrow">
+        <span class="eyebrow-line"></span>
+        <span class="eyebrow-text">About VinciCorp</span>
+      </div>
+      <h1>We close<br/><span class="gradient-text">the gap.</span></h1>
+      <p>The distance between an idea and what gets built has always been too wide. We started VinciCorp to eliminate it — one product at a time.</p>
+    </div>
+  </section>
+
+  <!-- MISSION -->
+  <section class="mission">
+    <div class="container">
+      <div class="mission-inner">
+        <div class="mission-text">
+          <div class="section-label">Our Mission</div>
+          <h2>Software should feel like thinking.</h2>
+          <p>The best tools don't feel like tools. They feel like extensions of your mind — there when you need them, invisible when you don't.</p>
+          <p>We believe we're at an inflection point in computing. The interfaces and operating systems built in the 80s and 90s were designed for a world that no longer exists. VinciCorp is building for the world that's coming.</p>
+          <p>VinciOS reimagines the OS from scratch. AceBlocks collapses the gap between logic and code. These aren't incremental improvements — they're rethinks.</p>
+        </div>
+        <div class="mission-values">
+          <div class="value">
+            <h4><span class="value-dot"></span> Speed over ceremony</h4>
+            <p>Move fast. Ship ideas. Iterate ruthlessly. The best product is the one in front of people, not the one being perfected in private.</p>
+          </div>
+          <div class="value">
+            <h4><span class="value-dot"></span> Invisible by design</h4>
+            <p>Great tools disappear. We obsess over removing every unnecessary step, every unnecessary click, every unnecessary thought.</p>
+          </div>
+          <div class="value">
+            <h4><span class="value-dot"></span> Privacy is non-negotiable</h4>
+            <p>Your data is yours. We don't sell it, we don't study it, we don't want it. Full stop.</p>
+          </div>
+          <div class="value">
+            <h4><span class="value-dot"></span> Build for builders</h4>
+            <p>Our users create things. We exist to amplify that — not to extract from it.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section class="story">
+    <div class="container">
+      <div class="story-header">
+        <div class="section-label">Our Story</div>
+        <h2 class="section-title">Where we've been.<br/><span class="gradient-text">Where we're going.</span></h2>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">The Beginning</div>
+          <h4>VinciCorp is founded</h4>
+          <p>Started with a single frustration: every tool we used was built for the past. We decided to build for the future instead.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Early Development</div>
+          <h4>VinciOS prototype</h4>
+          <p>The first internal build of VinciOS runs. Boots in under 2 seconds. The team calls it "embarrassingly fast."</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Expanding</div>
+          <h4>AceBlocks begins</h4>
+          <p>A question: what if you could build software logic the way you draw a flowchart? AceBlocks is born from that question.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Now</div>
+          <h4>Early access opens</h4>
+          <p>Both products are entering early access. We're looking for the people who get it — builders who want tools that think like they do.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact">
+    <div class="container">
+      <div class="section-label">Get In Touch</div>
+      <h2 class="section-title">Let's talk.</h2>
+      <p>Have a question, a partnership idea, or just want to say hi? We're builders — we like hearing from other builders.</p>
+      <div class="contact-actions">
+        <a href="mailto:hello@vincicorp.com" class="btn btn-primary">Email Us</a>
+        <a href="products.html" class="btn btn-outline">See Our Products</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="nav-logo">Vinci<span style="color:var(--accent)">Corp</span></span>
+          <p>Building tools that close the gap between imagination and reality.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Products</h4>
+          <a href="vincicos.html">VinciOS</a>
+          <a href="aceblocks.html">AceBlocks</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">About</a>
+          <a href="mailto:hello@vincicorp.com">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <a href="#">Twitter / X</a>
+          <a href="#">GitHub</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 VinciCorp. All rights reserved.</p>
+        <p>Building the future.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+  </script>
+</body>
+</html>

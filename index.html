@@ -3,184 +3,399 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VinciCorp — VinciOS</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <title>VinciCorp</title>
+  <link rel="stylesheet" href="nav.css" />
+  <style>
+    /* ---- HOME PAGE ---- */
+    body { cursor: none; }
+
+    .cursor {
+      position: fixed;
+      width: 10px; height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s, width 0.3s, height 0.3s, opacity 0.3s;
+      mix-blend-mode: screen;
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 40px; height: 40px;
+      border: 1px solid rgba(79,142,247,0.4);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: left 0.12s ease, top 0.12s ease, width 0.3s, height 0.3s;
+    }
+
+    /* NOISE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    /* ANIMATED BG */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(79,142,247,0.08);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      animation: expand 8s ease-in-out infinite;
+    }
+    .ring:nth-child(1) { width: 300px; height: 300px; animation-delay: 0s; }
+    .ring:nth-child(2) { width: 500px; height: 500px; animation-delay: 1.5s; }
+    .ring:nth-child(3) { width: 700px; height: 700px; animation-delay: 3s; }
+    .ring:nth-child(4) { width: 900px; height: 900px; animation-delay: 4.5s; }
+    .ring:nth-child(5) { width: 1100px; height: 1100px; animation-delay: 6s; }
+    @keyframes expand {
+      0%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+      50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(79,142,247,0.12) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* CONTENT */
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      max-width: 760px;
+      padding: 0 2rem;
+      animation: fadeInUp 1.2s ease both;
+    }
+
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+    }
+    .eyebrow-line { width: 40px; height: 1px; background: var(--border2); }
+    .eyebrow-text {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      margin-bottom: 2rem;
+    }
+    .hero-title .line2 {
+      display: block;
+      background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.05));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 420px;
+      margin: 0 auto 3rem;
+      line-height: 1.8;
+      letter-spacing: 0.01em;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* SCROLL INDICATOR */
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 10;
+      opacity: 0;
+      animation: fadeIn 1s ease 2s forwards;
+    }
+    .scroll-hint span { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+    .scroll-line {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--muted), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.1); }
+    }
+
+    /* TEASER SECTION */
+    .teaser {
+      padding: 6rem 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .teaser-label { margin-bottom: 4rem; }
+    .teaser-products {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5px;
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .teaser-product {
+      background: var(--bg2);
+      padding: 3.5rem 3rem;
+      text-align: left;
+      transition: background 0.3s;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      color: inherit;
+    }
+    .teaser-product:hover { background: var(--surface); }
+    .product-tag {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+      display: block;
+    }
+    .product-tag.green { color: var(--accent3); }
+    .teaser-product h3 {
+      font-family: var(--font-display);
+      font-size: 1.9rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.75rem;
+    }
+    .teaser-product p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; max-width: 280px; }
+    .product-arrow {
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: gap 0.2s, color 0.2s;
+    }
+    .teaser-product:hover .product-arrow { gap: 0.9rem; color: var(--text); }
+
+    /* MANIFESTO */
+    .manifesto {
+      padding: 10rem 0;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    .manifesto-text {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+      max-width: 800px;
+      margin: 0 auto;
+      color: rgba(255,255,255,0.15);
+    }
+    .manifesto-text .reveal {
+      color: var(--text);
+      transition: color 0.5s;
+    }
+
+    @media (max-width: 640px) {
+      .teaser-products { grid-template-columns: 1fr; }
+      .hero-title { font-size: 3.5rem; }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- NAV -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
   <nav class="nav" id="nav">
-    <a href="#" class="nav-logo">VinciCorp</a>
+    <a href="index.html" class="nav-logo">Vinci<span>Corp</span></a>
     <ul class="nav-links">
-      <li><a href="#features">Features</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="about.html">About</a></li>
     </ul>
-    <a href="#waitlist" class="nav-cta">Get Early Access</a>
-    <button class="nav-burger" id="burger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
+    <a href="products.html" class="nav-cta">Explore</a>
   </nav>
 
   <!-- HERO -->
   <section class="hero">
     <div class="hero-bg">
-      <div class="orb orb-1"></div>
-      <div class="orb orb-2"></div>
-      <div class="grid-overlay"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="hero-glow"></div>
     </div>
     <div class="hero-content">
-      <div class="hero-badge">Introducing VinciOS</div>
+      <div class="hero-eyebrow">
+        <span class="eyebrow-line"></span>
+        <span class="eyebrow-text">Something is coming</span>
+        <span class="eyebrow-line"></span>
+      </div>
       <h1 class="hero-title">
-        The OS built<br/>
-        for <span class="gradient-text">what's next.</span>
+        VinciCorp<br/>
+        <span class="line2">is building<br/>the future.</span>
       </h1>
-      <p class="hero-sub">VinciOS reimagines the operating system from the ground up — intelligent, fast, and crafted for people who build the future.</p>
+      <p class="hero-sub">We make tools that remove friction between human thought and what gets built.</p>
       <div class="hero-actions">
-        <a href="#waitlist" class="btn btn-primary">Request Early Access</a>
-        <a href="#features" class="btn btn-ghost">See What's Inside →</a>
+        <a href="products.html" class="btn btn-primary">See Our Products</a>
+        <a href="about.html" class="btn btn-outline">Who We Are</a>
       </div>
     </div>
-    <div class="hero-visual">
-      <div class="screen-mockup">
-        <div class="screen-bar">
-          <span></span><span></span><span></span>
-        </div>
-        <div class="screen-body">
-          <div class="screen-dock">
-            <div class="dock-icon"></div>
-            <div class="dock-icon"></div>
-            <div class="dock-icon active"></div>
-            <div class="dock-icon"></div>
-            <div class="dock-icon"></div>
-          </div>
-          <div class="screen-widgets">
-            <div class="widget widget-lg">
-              <div class="widget-label">VinciOS</div>
-              <div class="widget-value">System Ready</div>
-              <div class="widget-bar"><span style="width:78%"></span></div>
-            </div>
-            <div class="widget widget-sm">
-              <div class="widget-label">AI Core</div>
-              <div class="widget-value">Active</div>
-            </div>
-            <div class="widget widget-sm">
-              <div class="widget-label">Performance</div>
-              <div class="widget-value">98%</div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
     </div>
   </section>
 
-  <!-- FEATURES -->
-  <section class="features section" id="features">
+  <!-- TEASER -->
+  <section class="teaser">
     <div class="container">
-      <div class="section-label">Capabilities</div>
-      <h2 class="section-title">Built different,<br/>by design.</h2>
-      <div class="features-grid">
-        <div class="feature-card" data-delay="0">
-          <div class="feature-icon">⚡</div>
-          <h3>Lightning Performance</h3>
-          <p>VinciOS boots in under two seconds and keeps every interaction snappy — no bloat, no compromises.</p>
-        </div>
-        <div class="feature-card" data-delay="100">
-          <div class="feature-icon">🧠</div>
-          <h3>AI at the Core</h3>
-          <p>Not an add-on. Intelligence is woven into the kernel — your OS learns, adapts, and anticipates.</p>
-        </div>
-        <div class="feature-card" data-delay="200">
-          <div class="feature-icon">🔒</div>
-          <h3>Privacy First</h3>
-          <p>End-to-end encrypted from boot. Your data stays yours — no telemetry, no exceptions.</p>
-        </div>
-        <div class="feature-card" data-delay="300">
-          <div class="feature-icon">🛠</div>
-          <h3>Developer Native</h3>
-          <p>A terminal, package manager, and dev environment that feel like they were built by developers, for developers.</p>
-        </div>
-        <div class="feature-card" data-delay="400">
-          <div class="feature-icon">🌐</div>
-          <h3>Universal Compatibility</h3>
-          <p>Run your existing apps natively. VinciOS bridges the gap without emulation overhead.</p>
-        </div>
-        <div class="feature-card" data-delay="500">
-          <div class="feature-icon">✦</div>
-          <h3>Adaptive UI</h3>
-          <p>An interface that reshapes itself around how you work — your workflow, your rules.</p>
-        </div>
+      <div class="section-label teaser-label">What we're building</div>
+      <div class="teaser-products">
+        <a href="vincicos.html" class="teaser-product">
+          <span class="product-tag">Operating System</span>
+          <h3 class="gradient-text">VinciOS</h3>
+          <p>An operating system rebuilt from first principles. Intelligent, private, and fast by design.</p>
+          <div class="product-arrow">Learn more <span>→</span></div>
+        </a>
+        <a href="aceblocks.html" class="teaser-product">
+          <span class="product-tag green">Visual Programming</span>
+          <h3 class="gradient-green">AceBlocks</h3>
+          <p>Build real software logic without writing a single line of code. Visual. Powerful. Yours.</p>
+          <div class="product-arrow">Learn more <span>→</span></div>
+        </a>
       </div>
     </div>
   </section>
 
-  <!-- ABOUT -->
-  <section class="about section" id="about">
-    <div class="container about-inner">
-      <div class="about-text">
-        <div class="section-label">About VinciCorp</div>
-        <h2 class="section-title">We believe software should<br/>disappear.</h2>
-        <p>VinciCorp was founded on a simple idea: the best technology is invisible. It gets out of your way and lets you do your best work. VinciOS is the culmination of that belief — an operating system that feels less like software and more like a superpower.</p>
-        <a href="#contact" class="btn btn-primary" style="margin-top:2rem">Get in Touch</a>
-      </div>
-      <div class="about-stats">
-        <div class="stat">
-          <span class="stat-num">2s</span>
-          <span class="stat-label">Boot time</span>
-        </div>
-        <div class="stat">
-          <span class="stat-num">0</span>
-          <span class="stat-label">Telemetry</span>
-        </div>
-        <div class="stat">
-          <span class="stat-num">∞</span>
-          <span class="stat-label">Possibilities</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- WAITLIST / CONTACT -->
-  <section class="waitlist section" id="waitlist">
-    <div class="container waitlist-inner">
-      <div class="section-label">Early Access</div>
-      <h2 class="section-title">Be first in line.</h2>
-      <p class="waitlist-sub">VinciOS is coming. Join the waitlist and get access before anyone else.</p>
-      <div class="waitlist-form" id="waitlistForm">
-        <input type="email" id="emailInput" placeholder="your@email.com" class="form-input" />
-        <button class="btn btn-primary" onclick="handleSignup()">Join Waitlist</button>
-      </div>
-      <p class="waitlist-note" id="waitlistMsg"></p>
+  <!-- MANIFESTO -->
+  <section class="manifesto">
+    <div class="container">
+      <p class="manifesto-text" id="manifesto">
+        <span class="reveal">The gap between</span> <span>an idea and its execution</span>
+        <span class="reveal"> has always been</span> <span>too wide.</span>
+        <span class="reveal"> We're closing it.</span>
+      </p>
     </div>
   </section>
 
   <!-- FOOTER -->
-  <footer class="footer" id="contact">
-    <div class="container footer-inner">
-      <div class="footer-brand">
-        <span class="nav-logo">VinciCorp</span>
-        <p>Building the future of computing.</p>
-      </div>
-      <div class="footer-links">
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="nav-logo">Vinci<span style="color:var(--accent)">Corp</span></span>
+          <p>Building tools that close the gap between imagination and reality.</p>
+        </div>
         <div class="footer-col">
-          <h4>Product</h4>
-          <a href="#features">Features</a>
-          <a href="#waitlist">Early Access</a>
+          <h4>Products</h4>
+          <a href="vincicos.html">VinciOS</a>
+          <a href="aceblocks.html">AceBlocks</a>
         </div>
         <div class="footer-col">
           <h4>Company</h4>
-          <a href="#about">About</a>
+          <a href="about.html">About</a>
           <a href="mailto:hello@vincicorp.com">Contact</a>
         </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <a href="#">Twitter / X</a>
+          <a href="#">GitHub</a>
+        </div>
       </div>
-    </div>
-    <div class="footer-bottom container">
-      <p>© 2026 VinciCorp. All rights reserved.</p>
+      <div class="footer-bottom">
+        <p>© 2026 VinciCorp. All rights reserved.</p>
+        <p>Building the future.</p>
+      </div>
     </div>
   </footer>
 
-  <script src="main.js"></script>
+  <script>
+    // Nav scroll
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+      ring.style.left = e.clientX + 'px';
+      ring.style.top = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.width = '20px'; cursor.style.height = '20px';
+        ring.style.width = '60px'; ring.style.height = '60px';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.width = '10px'; cursor.style.height = '10px';
+        ring.style.width = '40px'; ring.style.height = '40px';
+      });
+    });
+
+    // Manifesto reveal on scroll
+    const spans = document.querySelectorAll('.manifesto-text span:not(.reveal)');
+    const obs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        spans.forEach((s, i) => {
+          setTimeout(() => s.style.color = 'var(--text)', i * 300);
+        });
+      }
+    }, { threshold: 0.5 });
+    const mani = document.getElementById('manifesto');
+    if (mani) obs.observe(mani);
+  </script>
 </body>
 </html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Products — VinciCorp</title>
+  <link rel="stylesheet" href="nav.css" />
+  <style>
+    /* PRODUCTS PAGE */
+    .page-hero {
+      padding: 14rem 0 6rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      width: 800px; height: 500px;
+      background: radial-gradient(ellipse, rgba(79,142,247,0.08) 0%, transparent 70%);
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+    .page-hero .section-label { margin-bottom: 1.5rem; }
+    .page-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+    }
+    .page-hero p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    /* PRODUCT CARDS */
+    .products-section { padding: 2rem 0 10rem; }
+    .product-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+      background: var(--bg2);
+      transition: border-color 0.3s;
+    }
+    .product-card:hover { border-color: var(--border2); }
+    .product-card.reverse { direction: rtl; }
+    .product-card.reverse > * { direction: ltr; }
+
+    .card-content {
+      padding: 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .card-tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(79,142,247,0.08);
+      border: 1px solid rgba(79,142,247,0.2);
+      padding: 0.35rem 0.9rem;
+      border-radius: 50px;
+      margin-bottom: 1.75rem;
+      width: fit-content;
+    }
+    .card-tag.green {
+      color: var(--accent3);
+      background: rgba(52,211,153,0.08);
+      border-color: rgba(52,211,153,0.2);
+    }
+    .card-content h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+      line-height: 1.1;
+    }
+    .card-content p {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.75;
+      margin-bottom: 2.5rem;
+      max-width: 380px;
+    }
+    .card-bullets {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-bottom: 2.5rem;
+    }
+    .card-bullet {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      color: var(--muted2);
+    }
+    .bullet-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+    .bullet-dot.green { background: var(--accent3); }
+    .card-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+    /* CARD VISUAL SIDE */
+    .card-visual {
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      min-height: 400px;
+      position: relative;
+      overflow: hidden;
+    }
+    .product-card.reverse .card-visual { border-left: none; border-right: 1px solid var(--border); }
+
+    /* OS Visual */
+    .os-visual {
+      width: 100%;
+      max-width: 340px;
+    }
+    .os-window {
+      background: #0a0e17;
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+    }
+    .os-titlebar {
+      height: 36px;
+      background: #0f1520;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 12px;
+    }
+    .os-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .os-dot:nth-child(1) { background: #ff5f57; }
+    .os-dot:nth-child(2) { background: #febc2e; }
+    .os-dot:nth-child(3) { background: #28c840; }
+    .os-body { padding: 1.25rem; }
+    .os-line {
+      height: 8px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.06);
+      margin-bottom: 8px;
+    }
+    .os-line.accent { background: rgba(79,142,247,0.3); }
+    .os-line.short { width: 60%; }
+    .os-line.med { width: 80%; }
+    .os-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 1rem;
+    }
+    .os-metric {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+    }
+    .os-metric-label { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .os-metric-val { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--accent); margin-top: 2px; }
+
+    /* AceBlocks Visual */
+    .blocks-visual {
+      width: 100%;
+      max-width: 340px;
+    }
+    .blocks-canvas {
+      background: #07100d;
+      border: 1px solid rgba(52,211,153,0.15);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+    }
+    .block {
+      border-radius: 8px;
+      padding: 0.7rem 1rem;
+      font-size: 0.78rem;
+      font-family: var(--font-display);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      letter-spacing: 0.03em;
+      position: relative;
+    }
+    .block-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+    .block.trigger { background: rgba(52,211,153,0.12); border: 1px solid rgba(52,211,153,0.25); color: var(--accent3); }
+    .block.trigger .block-dot { background: var(--accent3); }
+    .block.condition { background: rgba(79,142,247,0.1); border: 1px solid rgba(79,142,247,0.2); color: var(--accent); margin-left: 1.5rem; }
+    .block.condition .block-dot { background: var(--accent); }
+    .block.action { background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.2); color: var(--accent2); margin-left: 3rem; }
+    .block.action .block-dot { background: var(--accent2); }
+    .block-connector {
+      width: 1px; height: 16px;
+      background: rgba(255,255,255,0.08);
+      margin-left: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .product-card, .product-card.reverse {
+        grid-template-columns: 1fr;
+        direction: ltr;
+      }
+      .card-visual { min-height: 280px; }
+      .product-card.reverse .card-visual { border-right: none; border-top: 1px solid var(--border); }
+      .card-visual { border-left: none; border-top: 1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav" id="nav">
+    <a href="index.html" class="nav-logo">Vinci<span>Corp</span></a>
+    <ul class="nav-links">
+      <li><a href="products.html" class="active">Products</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <a href="mailto:hello@vincicorp.com" class="nav-cta">Contact</a>
+  </nav>
+
+  <section class="page-hero">
+    <div class="container">
+      <div class="section-label">Our Products</div>
+      <h1>Tools that <span class="gradient-text">remove friction.</span></h1>
+      <p>Two products. One mission — getting out of the way so you can build what you imagine.</p>
+    </div>
+  </section>
+
+  <section class="products-section">
+    <div class="container">
+
+      <!-- VinciOS -->
+      <div class="product-card">
+        <div class="card-content">
+          <span class="card-tag">Operating System</span>
+          <h2 class="gradient-text">VinciOS</h2>
+          <p>The operating system rebuilt for the next era of computing. Intelligent by design, private by default.</p>
+          <div class="card-bullets">
+            <div class="card-bullet"><span class="bullet-dot"></span> Boots in under 2 seconds</div>
+            <div class="card-bullet"><span class="bullet-dot"></span> AI woven into the kernel</div>
+            <div class="card-bullet"><span class="bullet-dot"></span> Zero telemetry, end-to-end encrypted</div>
+            <div class="card-bullet"><span class="bullet-dot"></span> Native compatibility with existing apps</div>
+          </div>
+          <div class="card-actions">
+            <a href="vincicos.html" class="btn btn-primary">Explore VinciOS</a>
+            <a href="vincicos.html#waitlist" class="btn btn-outline">Join Waitlist</a>
+          </div>
+        </div>
+        <div class="card-visual">
+          <div class="os-visual">
+            <div class="os-window">
+              <div class="os-titlebar">
+                <div class="os-dot"></div><div class="os-dot"></div><div class="os-dot"></div>
+              </div>
+              <div class="os-body">
+                <div class="os-line accent"></div>
+                <div class="os-line med"></div>
+                <div class="os-line short"></div>
+                <div class="os-metrics">
+                  <div class="os-metric"><div class="os-metric-label">Boot</div><div class="os-metric-val">1.8s</div></div>
+                  <div class="os-metric"><div class="os-metric-label">AI Core</div><div class="os-metric-val">On</div></div>
+                  <div class="os-metric"><div class="os-metric-label">Privacy</div><div class="os-metric-val">100%</div></div>
+                  <div class="os-metric"><div class="os-metric-label">Perf</div><div class="os-metric-val">98%</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AceBlocks -->
+      <div class="product-card reverse">
+        <div class="card-content">
+          <span class="card-tag green">Visual Programming</span>
+          <h2 class="gradient-green">AceBlocks</h2>
+          <p>Build real, powerful software logic without touching code. Drag, connect, and deploy — visually.</p>
+          <div class="card-bullets">
+            <div class="card-bullet"><span class="bullet-dot green"></span> Visual logic builder — no code required</div>
+            <div class="card-bullet"><span class="bullet-dot green"></span> Real programming constructs: if/else, loops, events</div>
+            <div class="card-bullet"><span class="bullet-dot green"></span> Export to production-ready code</div>
+            <div class="card-bullet"><span class="bullet-dot green"></span> Collaborate in real time</div>
+          </div>
+          <div class="card-actions">
+            <a href="aceblocks.html" class="btn btn-primary" style="background: var(--accent3); box-shadow: 0 0 28px rgba(52,211,153,0.25);">Explore AceBlocks</a>
+            <a href="aceblocks.html#waitlist" class="btn btn-outline">Join Waitlist</a>
+          </div>
+        </div>
+        <div class="card-visual">
+          <div class="blocks-visual">
+            <div class="blocks-canvas">
+              <div class="block trigger"><span class="block-dot"></span> On Button Click</div>
+              <div class="block-connector"></div>
+              <div class="block condition"><span class="block-dot"></span> If User is Logged In</div>
+              <div class="block-connector" style="margin-left:3.5rem"></div>
+              <div class="block action"><span class="block-dot"></span> Show Dashboard</div>
+              <div class="block-connector" style="margin-left:3.5rem"></div>
+              <div class="block action" style="opacity:0.5"><span class="block-dot"></span> Else → Redirect Login</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="nav-logo">Vinci<span style="color:var(--accent)">Corp</span></span>
+          <p>Building tools that close the gap between imagination and reality.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Products</h4>
+          <a href="vincicos.html">VinciOS</a>
+          <a href="aceblocks.html">AceBlocks</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">About</a>
+          <a href="mailto:hello@vincicorp.com">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <a href="#">Twitter / X</a>
+          <a href="#">GitHub</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 VinciCorp. All rights reserved.</p>
+        <p>Building the future.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+  </script>
+</body>
+</html>

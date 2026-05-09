@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AceBlocks — VinciCorp</title>
+  <link rel="stylesheet" href="nav.css" />
+  <style>
+    :root {
+      --ace: #34d399;
+      --ace2: #60d4b8;
+      --ace-glow: rgba(52,211,153,0.2);
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 10rem 0 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 900px; height: 900px;
+      background: radial-gradient(circle, rgba(52,211,153,0.06) 0%, transparent 65%);
+      top: -200px; right: -200px;
+      pointer-events: none;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(52,211,153,0.08);
+      border: 1px solid rgba(52,211,153,0.2);
+      color: var(--ace);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border-radius: 50px;
+      margin-bottom: 2rem;
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 6vw, 5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+      max-width: 440px;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .btn-ace {
+      background: var(--ace);
+      color: #06100a;
+      font-weight: 600;
+      box-shadow: 0 0 28px var(--ace-glow);
+    }
+    .btn-ace:hover { background: #4eeaab; box-shadow: 0 0 44px var(--ace-glow); transform: translateY(-2px); }
+
+    /* CANVAS DEMO */
+    .canvas-demo {
+      background: #070f0c;
+      border: 1px solid rgba(52,211,153,0.12);
+      border-radius: 18px;
+      padding: 1.75rem;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 60px rgba(52,211,153,0.04);
+      animation: float 7s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .canvas-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(52,211,153,0.08);
+    }
+    .tool-btn {
+      background: rgba(52,211,153,0.06);
+      border: 1px solid rgba(52,211,153,0.12);
+      color: var(--ace);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.75rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .tool-btn.active { background: rgba(52,211,153,0.15); border-color: rgba(52,211,153,0.3); }
+    .canvas-body { display: flex; flex-direction: column; gap: 4px; }
+    .cb {
+      border-radius: 8px;
+      padding: 0.65rem 0.9rem;
+      font-size: 0.76rem;
+      font-family: var(--font-display);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .cb-icon { width: 18px; height: 18px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; flex-shrink: 0; }
+    .cb.event { background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.2); color: var(--ace); }
+    .cb.event .cb-icon { background: rgba(52,211,153,0.2); }
+    .cb.logic { background: rgba(79,142,247,0.08); border: 1px solid rgba(79,142,247,0.18); color: var(--accent); margin-left: 1.2rem; }
+    .cb.logic .cb-icon { background: rgba(79,142,247,0.15); }
+    .cb.action { background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.18); color: var(--accent2); margin-left: 2.4rem; }
+    .cb.action .cb-icon { background: rgba(167,139,250,0.15); }
+    .cb.loop { background: rgba(251,191,36,0.06); border: 1px solid rgba(251,191,36,0.15); color: #fbbf24; margin-left: 1.2rem; }
+    .cb.loop .cb-icon { background: rgba(251,191,36,0.12); }
+    .cb-connector { width: 1px; height: 12px; background: rgba(255,255,255,0.06); margin-left: 1.7rem; }
+
+    /* FEATURES */
+    .features { padding: 8rem 0; border-top: 1px solid var(--border); }
+    .features-header { text-align: center; margin-bottom: 5rem; }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .feat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .feat-card:hover { border-color: rgba(52,211,153,0.2); transform: translateY(-4px); }
+    .feat-icon {
+      width: 44px; height: 44px;
+      background: rgba(52,211,153,0.08);
+      border: 1px solid rgba(52,211,153,0.15);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      margin-bottom: 1.25rem;
+    }
+    .feat-card h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 0.6rem; }
+    .feat-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+
+    /* HOW IT WORKS */
+    .how { padding: 8rem 0; border-top: 1px solid var(--border); background: var(--bg2); }
+    .how-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      margin-top: 4rem;
+      position: relative;
+    }
+    .how-steps::before {
+      content: '';
+      position: absolute;
+      top: 28px; left: 10%; right: 10%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--ace), transparent);
+      opacity: 0.2;
+    }
+    .step { text-align: center; }
+    .step-num {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: rgba(52,211,153,0.08);
+      border: 1px solid rgba(52,211,153,0.2);
+      color: var(--ace);
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+    }
+    .step h4 { font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .step p { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
+
+    /* WAITLIST */
+    .waitlist { padding: 8rem 0; text-align: center; border-top: 1px solid var(--border); }
+    .waitlist h2 { margin-bottom: 1rem; }
+    .waitlist p { color: var(--muted); margin-bottom: 2.5rem; font-size: 1.05rem; }
+    .waitlist-form { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+    .form-input {
+      flex: 1; min-width: 240px; max-width: 340px;
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      padding: 0.8rem 1.5rem;
+      border-radius: 50px;
+      outline: none;
+      transition: border-color 0.25s;
+    }
+    .form-input:focus { border-color: var(--ace); }
+    .form-input::placeholder { color: var(--muted); }
+    .waitlist-msg { margin-top: 1rem; font-size: 0.85rem; color: var(--ace); min-height: 1.2rem; }
+
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .how-steps { grid-template-columns: 1fr 1fr; }
+      .how-steps::before { display: none; }
+    }
+    @media (max-width: 600px) {
+      .features-grid, .how-steps { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav" id="nav">
+    <a href="index.html" class="nav-logo">Vinci<span>Corp</span></a>
+    <ul class="nav-links">
+      <li><a href="products.html" class="active">Products</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <a href="#waitlist" class="nav-cta" style="background:var(--ace);color:#06100a;">Early Access</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-badge">✦ Visual Programming</div>
+          <h1><span class="gradient-green">AceBlocks</span><br/>Logic without<br/>the language.</h1>
+          <p>Build real software logic by connecting visual blocks. No syntax errors. No steep learning curve. Just your ideas — running.</p>
+          <div class="hero-actions">
+            <a href="#waitlist" class="btn btn-ace">Get Early Access</a>
+            <a href="products.html" class="btn btn-outline">← All Products</a>
+          </div>
+        </div>
+        <div>
+          <div class="canvas-demo">
+            <div class="canvas-toolbar">
+              <div class="tool-btn active">Logic</div>
+              <div class="tool-btn">Events</div>
+              <div class="tool-btn">Data</div>
+              <div class="tool-btn">UI</div>
+            </div>
+            <div class="canvas-body">
+              <div class="cb event"><span class="cb-icon">⚡</span> On Form Submit</div>
+              <div class="cb-connector"></div>
+              <div class="cb logic"><span class="cb-icon">◆</span> If Email is Valid</div>
+              <div class="cb-connector" style="margin-left:2.6rem"></div>
+              <div class="cb action"><span class="cb-icon">→</span> Create User Account</div>
+              <div class="cb-connector" style="margin-left:2.6rem"></div>
+              <div class="cb action"><span class="cb-icon">✉</span> Send Welcome Email</div>
+              <div class="cb-connector" style="margin-left:2.6rem"></div>
+              <div class="cb action" style="opacity:0.45"><span class="cb-icon">↗</span> Redirect to Dashboard</div>
+              <div class="cb-connector"></div>
+              <div class="cb loop"><span class="cb-icon">↺</span> Else → Show Error</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="container">
+      <div class="features-header">
+        <div class="section-label" style="color:var(--ace)">Capabilities</div>
+        <h2 class="section-title">Everything a developer has.<br/><span class="gradient-green">Nothing they don't need.</span></h2>
+      </div>
+      <div class="features-grid">
+        <div class="feat-card">
+          <div class="feat-icon">🔗</div>
+          <h3>Visual Logic Blocks</h3>
+          <p>Build if/else branches, loops, and event handlers by dragging and connecting blocks on a canvas.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">⚡</div>
+          <h3>Real-Time Execution</h3>
+          <p>See your logic run live as you build it. No compile step, no waiting — instant feedback.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">📤</div>
+          <h3>Code Export</h3>
+          <p>Export your visual logic to clean, production-ready JavaScript, Python, or TypeScript.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">🧩</div>
+          <h3>Block Library</h3>
+          <p>Hundreds of pre-built blocks for common patterns — API calls, data transforms, UI interactions.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">👥</div>
+          <h3>Real-Time Collaboration</h3>
+          <p>Build logic with your team simultaneously — like Google Docs, but for programming.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">🔌</div>
+          <h3>API Integrations</h3>
+          <p>Connect to any REST API or database with a drag. No auth boilerplate, no SDK setup.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how">
+    <div class="container">
+      <div class="section-label" style="color:var(--ace);text-align:center">How It Works</div>
+      <h2 class="section-title" style="text-align:center">From idea to running logic<br/>in four steps.</h2>
+      <div class="how-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h4>Start a Flow</h4>
+          <p>Pick a trigger — button click, form submit, schedule, webhook — and drop it on the canvas.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h4>Add Logic</h4>
+          <p>Connect conditions, loops, and branches from the block library. Snap them together like puzzle pieces.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h4>Define Actions</h4>
+          <p>Tell each branch what to do — update a database, send an email, show a UI, call an API.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <h4>Run or Export</h4>
+          <p>Execute live in AceBlocks or export clean code to drop into any project.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAITLIST -->
+  <section class="waitlist" id="waitlist">
+    <div class="container">
+      <div class="section-label" style="color:var(--ace)">Early Access</div>
+      <h2 class="section-title">Be among the first<br/>to build visually.</h2>
+      <p>AceBlocks is in development. Join the waitlist for early access.</p>
+      <div class="waitlist-form">
+        <input type="email" id="emailInput" placeholder="your@email.com" class="form-input" />
+        <button class="btn btn-ace" onclick="handleSignup()">Join Waitlist</button>
+      </div>
+      <p class="waitlist-msg" id="waitlistMsg"></p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="nav-logo">Vinci<span style="color:var(--accent)">Corp</span></span>
+          <p>Building tools that close the gap between imagination and reality.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Products</h4>
+          <a href="vincicos.html">VinciOS</a>
+          <a href="aceblocks.html">AceBlocks</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">About</a>
+          <a href="mailto:hello@vincicorp.com">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <a href="#">Twitter / X</a>
+          <a href="#">GitHub</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 VinciCorp. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+
+    function handleSignup() {
+      const input = document.getElementById('emailInput');
+      const msg = document.getElementById('waitlistMsg');
+      const email = input.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        msg.textContent = 'Please enter a valid email.';
+        msg.style.color = '#f87171'; return;
+      }
+      msg.textContent = "You're on the list! We'll be in touch. 🚀";
+      msg.style.color = 'var(--ace)';
+      input.value = '';
+    }
+    document.getElementById('emailInput')?.addEventListener('keydown', e => { if (e.key === 'Enter') handleSignup(); });
+  </script>
+</body>
+</html>
